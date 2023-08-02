@@ -6,10 +6,10 @@ import { useCounterStore } from '../stores/counter';
 export default{
     components: { RouterLink },
     computed:{
-        // ...mapState(storeLogin, ['isLogin'])
+        ...mapState(useCounterStore, ['isLogin'])
     },
     methods:{
-        ...mapActions(useCounterStore, ['logout', 'handleSearch']),
+        ...mapActions(useCounterStore, ['logout', 'handleSearch', 'subscribe']),
     },
     data(){
         return{
@@ -30,17 +30,37 @@ export default{
                             <span class="ml-32 py-2 px-4 rounded font-family: 'Roboto', sans-serif; font-extrabold text-[#00B8A9] bg-white"> WATCHER </span>
                         </RouterLink>
                     </div>
-                    <div class="hidden sm:ml-6 sm:block">
-                    <div class="flex space-x-4">
-                        <RouterLink 
-                        to="/wl"
-                        class=" hover:bg-white hover:text-[#00B8A9] text-white rounded-md px-3 py-2 text-sm font-medium"
-                        >
-                        Watchlist
-                        </RouterLink>
+                    <div v-if="isLogin" class="hidden sm:ml-6 sm:block">
+                        <div class="flex space-x-4">
+                            <RouterLink 
+                            to="/wl"
+                            class=" hover:bg-white hover:text-[#00B8A9] text-white rounded-md px-3 py-2 text-sm font-medium"
+                            >
+                            Watchlist
+                            </RouterLink>
+                        </div>
                     </div>
+                    <div v-if="isLogin" class="hidden sm:ml-6 sm:block">
+                        <div class="flex space-x-4">
+                            <RouterLink 
+                            to="/fs"
+                            class=" hover:bg-white hover:text-[#00B8A9] text-white rounded-md px-3 py-2 text-sm font-medium"
+                            >
+                            Financial Statement (Premium)
+                            </RouterLink>
+                        </div>
                     </div>
                 </div>
+                <div v-if="isLogin" class="hidden sm:ml-6 sm:block">
+                        <div class="flex space-x-4 mr-6">
+                            <button
+                            @click.prevent="subscribe"
+                            class=" hover:bg-white hover:text-[#00B8A9] text-white rounded-md px-3 py-2 text-sm font-medium"
+                            >
+                                GET PREMIUM !!
+                           </button>
+                        </div>
+                    </div>
                 <div>
                     <form @submit.prevent="handleSearch(symbol)">
                       <input
@@ -51,7 +71,7 @@ export default{
                       />
                     </form>
                 </div>
-                    <div  class="row flex justify-end">
+                    <div v-if="!isLogin" class="row flex justify-end">
                         <div class="hidden sm:ml-6 sm:block">
                             <div class="flex space-x-4">
                                 <RouterLink 
@@ -62,7 +82,7 @@ export default{
                                 </RouterLink>
                             </div>
                         </div>
-                        <div class="hidden sm:ml-6 sm:block">
+                        <div v-if="!isLogin" class="hidden sm:ml-6 sm:block">
                             <div class="flex space-x-4 mr-12">
                                 <RouterLink 
                                 to="/login"
@@ -73,15 +93,15 @@ export default{
                             </div>
                         </div>
                     </div> 
-                    <div  class="hidden sm:ml-6 sm:block">
+                    
+                    <div v-if="isLogin" class="hidden sm:ml-6 sm:block">
                         <div class="flex space-x-4 mr-16">
-                            <RouterLink 
-                           @click.prevent="logout"
-                            to="/login"
+                            <button
+                            @click.prevent="logout" 
                             class=" hover:bg-white hover:text-[#00B8A9] text-white rounded-md px-3 py-2 text-sm font-medium"
                             >
-                            Logout
-                            </RouterLink>
+                                Logout
+                           </button>
                         </div>
                     </div>
             </div>

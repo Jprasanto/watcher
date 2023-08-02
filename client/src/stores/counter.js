@@ -11,7 +11,8 @@ export const useCounterStore = defineStore('counter', {
       ihsgDataDate: '',
       ihsgDataValue: '',
       stockClose: '',
-      stockDate: ''
+      stockDate: '',
+      user: ''
     }
   },
 
@@ -19,13 +20,17 @@ export const useCounterStore = defineStore('counter', {
     isLogin() {
       if (this.access_token) return true
       return false
+    },
+    isPremium() {
+      if (this.user.role === "premium") return true
+      return false
     }
   },
 
   actions: {
     async login(email, password) {
       try {
-        console.log(email, password, 9090)
+        // console.log(email, password, 9090)
         const response = await axios({
           method: 'post',
           url: baseUrl + '/login',
@@ -46,10 +51,10 @@ export const useCounterStore = defineStore('counter', {
     logout() {
       this.access_token = ''
       localStorage.clear()
-      this.router.push('/')
+      this.router.push('/login')
     },
     async register(email, password) {
-      console.log("FAS")
+      // console.log("FAS")
       try {
         const user = await axios({
           url: baseUrl + '/register',
@@ -59,11 +64,9 @@ export const useCounterStore = defineStore('counter', {
             password
           }
         })
-        this.router.push('/');
-
+        this.router.push('/login');
       } catch (err) {
         console.log(err)
-
       }
     },
     async ihsg() {
@@ -89,7 +92,7 @@ export const useCounterStore = defineStore('counter', {
       }
     },
     async handleSearch(symbol) {
-      console.log(symbol, '<<<< symbol nih')
+      // console.log(symbol, '<<<< symbol nih')
       try {
         const { data } = await axios({
           url: baseUrl + `/stocks/` + symbol,
@@ -100,8 +103,8 @@ export const useCounterStore = defineStore('counter', {
         })
         const close = data.apiResponse.data.eod.map(el => el.close)
         const dateStock = data.apiResponse.data.eod.map(el => el.date.split("T")[0])
-        console.log(close, "ini close")
-        console.log(dateStock, "<<< ini date")
+        // console.log(close, "ini close")
+        // console.log(dateStock, "<<< ini date")
       } catch (err) {
         console.log(err, '<<< error')
       }
@@ -109,7 +112,7 @@ export const useCounterStore = defineStore('counter', {
     async stockDataGraph(symbol) {
       try {
         const { data } = await axios({
-          url: baseUrl + `/stocks/${symbol}`,
+          url: baseUrl + '/stocks/:symbol',
           method: 'get',
           headers: {
             access_token: localStorage.getItem("access_token")
@@ -117,6 +120,66 @@ export const useCounterStore = defineStore('counter', {
         })
         console.log(data)
         this.stock = data
+      } catch (err) {
+        console.log(err)
+      }
+    },
+    async fsStock(symbol) {
+      try {
+        const { data } = await axios({
+          url: baseUrl + `/fs/` + symbol,
+          method: 'get',
+          headers: {
+            access_token: localStorage.getItem("access_token")
+          }
+        })
+      } catch (err) {
+        console.log(err, '<<< error')
+      }
+    },
+    async getProfile() {
+      try {
+        const { data } = await axios.get(baseUrl + '/profile', {
+          headers: {
+            access_token: localStorage.getItem("access_token")
+          }
+        })
+        this.user = data
+      } catch (err) {
+        console.log(err)
+      }
+    },
+    async premium() {
+      try {
+        const { data } = await axios({
+          url: baseUrl + '/subscription',
+          method: 'patch',
+          headers: {
+            access_token: localStorage.getItem("access_token")
+          }
+        })
+        this.getProfile()
+      } catch (err) {
+        console.log(err)
+      }
+    },
+    async subscribe() {
+      try {
+        const { data } = await axios({
+          url: baseUrl + '/generate-midtrans-token',
+          method: 'post',
+          headers: {
+            access_token: localStorage.getItem("access_token")
+          }
+        })
+        // console.log(data.midtransToken, "token midtrans")
+        const role = this.premium
+
+        window.snap.pay(data.midtransToken.token, {
+          onSuccess: function (result) {
+            role()
+          },
+        })
       } catch (err) {
         console.log(err)
       }
