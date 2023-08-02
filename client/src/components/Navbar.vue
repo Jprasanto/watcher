@@ -9,12 +9,11 @@ export default{
         // ...mapState(storeLogin, ['isLogin'])
     },
     methods:{
-        ...mapActions(useCounterStore, ['logout']),
-        // ...mapActions(productStore, ['handleSearch'])
+        ...mapActions(useCounterStore, ['logout', 'handleSearch']),
     },
     data(){
         return{
-          search: ''
+          symbol: ''
         }
     },
 }
@@ -43,9 +42,9 @@ export default{
                     </div>
                 </div>
                 <div>
-                    <form >
+                    <form @submit.prevent="handleSearch(symbol)">
                       <input
-                          v-model="search"
+                          v-model="symbol"
                           class="border-2 p-2 w-full rounded"
                           placeholder="Search here ..."
                           autocomplete="off"

@@ -10,7 +10,8 @@ export const useCounterStore = defineStore('counter', {
       access_token: localStorage.getItem('access_token') || '',
       ihsgDataDate: '',
       ihsgDataValue: '',
-      stock: '',
+      stockClose: '',
+      stockDate: ''
     }
   },
 
@@ -77,7 +78,7 @@ export const useCounterStore = defineStore('counter', {
         })
         // console.log(data, "<><><")
         const res = data.ihsg.map(el => el.date)
-        console.log(res)
+        // console.log(res)
         const value = data.ihsg.map(el => el.last)
         this.ihsgDataDate = res
         this.ihsgDataValue = value
@@ -87,10 +88,28 @@ export const useCounterStore = defineStore('counter', {
         console.log(err)
       }
     },
+    async handleSearch(symbol) {
+      console.log(symbol, '<<<< symbol nih')
+      try {
+        const { data } = await axios({
+          url: baseUrl + `/stocks/` + symbol,
+          method: 'get',
+          headers: {
+            access_token: localStorage.getItem("access_token")
+          }
+        })
+        const close = data.apiResponse.data.eod.map(el => el.close)
+        const dateStock = data.apiResponse.data.eod.map(el => el.date.split("T")[0])
+        console.log(close, "ini close")
+        console.log(dateStock, "<<< ini date")
+      } catch (err) {
+        console.log(err, '<<< error')
+      }
+    },
     async stockDataGraph(symbol) {
       try {
         const { data } = await axios({
-          url: baseUrl + '/stocks/:symbol',
+          url: baseUrl + `/stocks/${symbol}`,
           method: 'get',
           headers: {
             access_token: localStorage.getItem("access_token")
