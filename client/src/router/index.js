@@ -3,6 +3,7 @@ import HomeView from '../views/HomeView.vue'
 import Login from '../views/Login.vue'
 import Register from '../views/Register.vue'
 import Watchlist from '../views/Watchlist.vue'
+import FStat from '../views/FStat.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -26,6 +27,11 @@ const router = createRouter({
       path: '/wl',
       name: 'wl',
       component: Watchlist
+    },
+    {
+      path: '/fs',
+      name: 'fs',
+      component: FStat
     }
   ]
 })
