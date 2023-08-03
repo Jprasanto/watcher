@@ -57,7 +57,8 @@ export default{
               type="password"
               class=" placeholder-white bg-[#FFDE7D] rounded border-0 p-3 "
               id="exampleFormControlInput33"
-              placeholder="Password" />
+              placeholder="Password" 
+              autocomplete="off"/>
           </div>
 
           <!-- Submit button -->
