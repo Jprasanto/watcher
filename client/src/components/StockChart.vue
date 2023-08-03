@@ -28,7 +28,7 @@
     components: {
       Line
     },
-    props: ['stockClose', 'stockDate'],
+    props: ['stockClose', 'stockDate', 'stockName', 'stockOpen', 'stockHigh', 'stockLow', 'stockVolume'],
     methods:{
 
     },
@@ -76,33 +76,35 @@
     <Line :options="chartOptions" :data="data"/>
         <div class="px-4 py-4 md:px-10">
             <h1 class="font-bold text-lg">
-                UI,UX Concepts
+                {{ stockName }}
             </h1>
-            <p class="py-4">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Excepturi quas sapiente
-                voluptate
-                earum natus facilis dolor deserunt dolorum tempora obcaecati consequatur rem, vel
-                distinctio
-                perferendis tempore nemo sequi eos accusantium.
-            </p>
             <div class="flex flex-wrap pt-8">
                 <div class="w-full md:w-1/3 text-sm font-medium">
-                    NOVEMBER 1,2019
+                    {{ stockDate[0] }}
                 </div>
-                <div class="2/3">
-                    <div class="text-sm font-medium">
-                        SHARE:
-                        <a href="" class="text-blue-700 px-1 ">
-                            FACEBOOk
-                        </a>
-                        <a href="" class="text-blue-500 px-1 ">
-                            TWITTER
-                        </a>
-                        <a href="" class="text-red-600 px-1 ">
-                            GOOGLE+
-                        </a>
+                <div class="flex">
+                    <div>
+                        <div>
+                            Open : {{ stockOpen[0] }}
+                        </div>
+                        <div>
+                            Close : {{ stockClose[0] }}
+                        </div>
+                        <div>
+                            Volume : {{ stockVolume[0] }}
+                        </div>
+                    </div>
+                    <div class="pl-4">
+                        <div>
+                            High : {{ stockHigh[0] }}
+                        </div>
+                        <div>
+                            Low : {{ stockLow[0] }}
+                        </div>
                     </div>
                 </div>
+                
+
             </div>
         </div>
 </template>

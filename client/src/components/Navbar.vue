@@ -6,7 +6,7 @@ import { useCounterStore } from '../stores/counter';
 export default{
     components: { RouterLink },
     computed:{
-        ...mapState(useCounterStore, ['isLogin'])
+        ...mapState(useCounterStore, ['isLogin', 'isPremium'])
     },
     methods:{
         ...mapActions(useCounterStore, ['logout', 'handleSearch', 'subscribe']),
@@ -27,8 +27,18 @@ export default{
                 <div class="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
                     <div class="flex flex-shrink-0 items-center">
                         <RouterLink to="/">
-                            <span class="ml-32 py-2 px-4 rounded font-family: 'Roboto', sans-serif; font-extrabold text-[#00B8A9] bg-white"> WATCHER </span>
+                            <span class="ml-16 py-2 px-4 rounded font-family: 'Roboto', sans-serif; font-extrabold text-[#00B8A9] bg-white"> WATCHER </span>
                         </RouterLink>
+                    </div>
+                    <div v-if="isLogin" class="hidden sm:ml-6 sm:block">
+                        <div class="flex space-x-4">
+                            <RouterLink 
+                            to="/ticker"
+                            class=" hover:bg-white hover:text-[#00B8A9] text-white rounded-md px-3 py-2 text-sm font-medium"
+                            >
+                            StocksList
+                            </RouterLink>
+                        </div>
                     </div>
                     <div v-if="isLogin" class="hidden sm:ml-6 sm:block">
                         <div class="flex space-x-4">
@@ -40,7 +50,7 @@ export default{
                             </RouterLink>
                         </div>
                     </div>
-                    <div v-if="isLogin" class="hidden sm:ml-6 sm:block">
+                    <div v-if="isLogin && isPremium" class="hidden sm:ml-6 sm:block">
                         <div class="flex space-x-4">
                             <RouterLink 
                             to="/fs"
@@ -51,23 +61,33 @@ export default{
                         </div>
                     </div>
                 </div>
-                <div v-if="isLogin" class="hidden sm:ml-6 sm:block">
-                        <div class="flex space-x-4 mr-6">
-                            <button
-                            @click.prevent="subscribe"
-                            class=" hover:bg-white hover:text-[#00B8A9] text-white rounded-md px-3 py-2 text-sm font-medium"
-                            >
-                                GET PREMIUM !!
-                           </button>
-                        </div>
+                <div v-if="isLogin && !isPremium" class="hidden sm:ml-6 sm:block">
+                    <div class="flex space-x-4 mr-6">
+                        <button
+                        @click.prevent="subscribe"
+                        class=" hover:bg-white hover:text-[#00B8A9] text-white rounded-md px-3 py-2 text-sm font-medium"
+                        >
+                            GET PREMIUM !!
+                        </button>
                     </div>
-                <div>
+                </div>
+                <div v-if="isLogin && isPremium" class="hidden sm:ml-6 sm:block">
+                    <div class="flex space-x-4 mr-6">
+                        <button
+                        class=" hover:bg-white hover:text-[#00B8A9] text-white rounded-md px-3 py-2 text-sm font-medium"
+                        >
+                            You are a PREMIUM member
+                        </button>
+                    </div>
+                </div>
+                <div>    
                     <form @submit.prevent="handleSearch(symbol)">
                       <input
                           v-model="symbol"
                           class="border-2 p-2 w-full rounded"
                           placeholder="Search here ..."
                           autocomplete="off"
+                          type="search"
                       />
                     </form>
                 </div>
@@ -95,7 +115,7 @@ export default{
                     </div> 
                     
                     <div v-if="isLogin" class="hidden sm:ml-6 sm:block">
-                        <div class="flex space-x-4 mr-16">
+                        <div class="flex space-x-4 mr-10">
                             <button
                             @click.prevent="logout" 
                             class=" hover:bg-white hover:text-[#00B8A9] text-white rounded-md px-3 py-2 text-sm font-medium"
