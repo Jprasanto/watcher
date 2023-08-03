@@ -1,7 +1,8 @@
 import { defineStore } from 'pinia'
 import axios from 'axios'
 
-const baseUrl = 'http://localhost:3000'
+const baseUrl = 'https://watchers-iproject.joniprasanto.com'
+
 export const useCounterStore = defineStore('counter', {
   state: () => {
     return {
